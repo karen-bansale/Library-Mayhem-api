@@ -1,7 +1,7 @@
 {
-  "name": "your-game-api",
+  "name": "Library-Mayhem-api",
   "version": "1.0.0",
-  "description": "CHANGE_ME - one sentence about your game (CS 313 Software Engineering 1)",
+  "description": "library management game where players return books, help students by answering quiz questions, and keep the library under control before time runs outis duration cannot be changed by the host.",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
@@ -19,7 +19,7 @@
   "engines": {
     "node": ">=22"
   },
-  "author": "CHANGE_ME - your full name",
+  "author": "Karen Bansale",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^18.0.7",
