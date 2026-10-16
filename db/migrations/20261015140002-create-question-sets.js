@@ -1,5 +1,6 @@
 'use strict';
 
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('question_sets', {
@@ -8,15 +9,7 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true
       },
-      title: {
-        type: Sequelize.STRING(120),
-        allowNull: false
-      },
-      description: {
-        type: Sequelize.TEXT,
-        allowNull: true
-      },
-      created_by: {
+      host_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -24,6 +17,14 @@ module.exports = {
           key: 'user_id'
         },
         onDelete: 'CASCADE'
+      },
+      title: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      description: {
+        type: Sequelize.STRING,
+        allowNull: true
       },
       created_at: {
         type: Sequelize.DATE,
