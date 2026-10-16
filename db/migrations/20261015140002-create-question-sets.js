@@ -8,7 +8,15 @@ module.exports = {
         primaryKey: true,
         autoIncrement: true
       },
-      host_id: {
+      title: {
+        type: Sequelize.STRING(120),
+        allowNull: false
+      },
+      description: {
+        type: Sequelize.TEXT,
+        allowNull: true
+      },
+      created_by: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
@@ -16,15 +24,6 @@ module.exports = {
           key: 'user_id'
         },
         onDelete: 'CASCADE'
-      },
-      title: {
-        type: Sequelize.STRING(100),
-        allowNull: false
-      },
-      description: {
-        type: Sequelize.TEXT,
-        allowNull: true,
-        defaultValue: null
       },
       created_at: {
         type: Sequelize.DATE,
