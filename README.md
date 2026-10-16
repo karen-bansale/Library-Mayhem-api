@@ -60,17 +60,17 @@ Base URL: `http://localhost:3001/api/v1`
 
 ## What "completed" means in my game
 
-[A player completed the game when they answered every question in the question set, regardless of whether their answers were correct or incorrect."]
+A player completed the game when they answered every question in the question set, regardless of whether their answers were correct or incorrect.
 
 ## Tables
 
-[users
+users
 question_sets
 questions
 choices
 game_sessions
 players
-answers]
+answers
 
 ## Database scripts
 
