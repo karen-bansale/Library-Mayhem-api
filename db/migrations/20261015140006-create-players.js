@@ -1,5 +1,6 @@
 'use strict';
 
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('players', {
@@ -27,7 +28,7 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       nickname: {
-        type: Sequelize.STRING(24),
+        type: Sequelize.STRING,
         allowNull: false
       },
       score: {
@@ -42,21 +43,15 @@ module.exports = {
       },
       finished_at: {
         type: Sequelize.DATE,
-        allowNull: true,
-        defaultValue: null
+        allowNull: true
       }
     });
 
-    // Check constraint para sa score (must be zero or greater)
+    // Idagdag ang UNIQUE constraint sa session_id at user_id
     await queryInterface.addConstraint('players', {
-      type: 'check',
-      name: 'check_players_score_gte_zero',
-      fields: ['score'],
-      where: {
-        score: {
-          [Sequelize.Op.gte]: 0
-        }
-      }
+      fields: ['session_id', 'user_id'],
+      type: 'unique',
+      name: 'uq_players_session_user'
     });
   },
 
