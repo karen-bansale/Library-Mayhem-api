@@ -47,11 +47,11 @@ module.exports = {
       }
     });
 
-    // Idagdag ang UNIQUE constraint sa session_id at user_id
+    // Composite UNIQUE constraint para sa (session_id, user_id)
     await queryInterface.addConstraint('players', {
       fields: ['session_id', 'user_id'],
       type: 'unique',
-      name: 'uq_players_session_user'
+      name: 'unique_session_user_seat'
     });
   },
 
