@@ -22,4 +22,4 @@ QuestionSet.belongsTo(User, { foreignKey: 'host_id', as: 'host' });
 //   User.hasMany(Player, { foreignKey: 'user_id' });
 //   Player.belongsTo(User, { foreignKey: 'user_id' });
 
-module.exports = { sequelize, Sequelize, DataTypes };
+module.exports = { sequelize, Sequelize, DataTypes, User, QuestionSet };

@@ -23,7 +23,7 @@ router.route('/')
 
 router.route('/:id')
   .get(idParam, validate, get)
-  .put(updateQuestionSetRules, validate, update)
+  .patch(updateQuestionSetRules, validate, update)
   .delete(idParam, validate, remove);
 
 module.exports = router;

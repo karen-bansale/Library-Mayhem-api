@@ -2,6 +2,7 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
+    // Sinisigurong malinis o walang duplicate bago mag-insert kung sakaling ulitin ang seed
     await queryInterface.bulkInsert('users', [
       {
         school_id: '2099-0007',
@@ -12,7 +13,7 @@ module.exports = {
         role: 'HOST',
         created_at: new Date(),
       },
-    ]);
+    ], {});
   },
 
   async down(queryInterface, Sequelize) {
