@@ -2,7 +2,6 @@ const { Sequelize, DataTypes } = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/database')[env];
 
-
 let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
@@ -15,10 +14,12 @@ const User = require('./user')(sequelize, DataTypes);
 const QuestionSet = require('./question-set')(sequelize, DataTypes);
 
 
+User.hasMany(QuestionSet, { foreignKey: 'host_id' });
+QuestionSet.belongsTo(User, { foreignKey: 'host_id', as: 'host' });
+
 module.exports = {
   sequelize,
   Sequelize,
   User,
   QuestionSet,
- 
 };

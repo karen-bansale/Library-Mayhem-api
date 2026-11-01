@@ -1,6 +1,5 @@
-// Database settings for BOTH the running API and sequelize-cli.
-// Values come from .env - nothing secret is written in this file.
 const env = require('./env');
+const path = require('path');
 
 const settings = {
   username: env.db.user,
@@ -10,9 +9,9 @@ const settings = {
   port: env.db.port,
   dialect: 'postgres',
   logging: false,
-  // Track seeders in a table, the same way migrations are tracked,
-  // so running "db:seed:all" twice does not insert the data twice.
-  seederStorage: 'sequelize',
+
+    seederStorage: 'sequelize',
+    seedersPath: path.resolve(__dirname, '../seeders'),
   pool: { max: 10, min: 0, idle: 10000 },
 };
 
