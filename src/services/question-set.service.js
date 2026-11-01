@@ -1,44 +1,49 @@
 const questionSetRepository = require('../repositories/question-set.repository');
-const { notFound, forbidden } = require('../errors/app-error');
+const { AppError } = require('../errors/app-error');
 
-async function findOrFail(id) {
-  const questionSet = await questionSetRepository.findById(id);
-  if (!questionSet) {
-    throw notFound('QUESTION_SET_NOT_FOUND', `No question set has the id ${id}.`);
+class QuestionSetService {
+  async getAllQuestionSets() {
+    return await questionSetRepository.findAll();
   }
-  return questionSet;
-}
 
-function isOwner(questionSet, user) {
-  return questionSet.host_id === user.user_id || user.role === 'ADMIN';
-}
-
-function list() {
-  return questionSetRepository.findAll();
-}
-
-async function get(id) {
-  return findOrFail(id);
-}
-
-function create(data, user) {
-  return questionSetRepository.create({ ...data, host_id: user.user_id });
-}
-
-async function update(id, changes, user) {
-  const questionSet = await findOrFail(id);
-  if (!isOwner(questionSet, user)) {
-    throw forbidden('This question set belongs to another host.');
+  async getQuestionSetById(id) {
+    const set = await questionSetRepository.findById(id);
+    if (!set) {
+      throw new AppError(404, 'NOT_FOUND', 'Question set not found.');
+    }
+    return set;
   }
-  return questionSetRepository.update(questionSet, changes);
-}
 
-async function remove(id, user) {
-  const questionSet = await findOrFail(id);
-  if (!isOwner(questionSet, user)) {
-    throw forbidden('This question set belongs to another host.');
+  async createQuestionSet(userId, data) {
+    return await questionSetRepository.create({
+      ...data,
+      host_id: userId,
+    });
   }
-  return questionSetRepository.remove(questionSet);
+
+  async updateQuestionSet(id, userId, data) {
+    const set = await questionSetRepository.findById(id);
+    if (!set) {
+      throw new AppError(404, 'NOT_FOUND', 'Question set not found.');
+    }
+    // Ownership check: Hindi pwedeng baguhin ng ibang host ang hindi kanila
+    if (set.host_id !== userId) {
+      throw new AppError(403, 'FORBIDDEN', 'You do not own this question set.');
+    }
+    return await questionSetRepository.update(id, data);
+  }
+
+  async deleteQuestionSet(id, userId) {
+    const set = await questionSetRepository.findById(id);
+    if (!set) {
+      throw new AppError(404, 'NOT_FOUND', 'Question set not found.');
+    }
+    // Ownership check
+    if (set.host_id !== userId) {
+      throw new AppError(403, 'FORBIDDEN', 'You do not own this question set.');
+    }
+    return await questionSetRepository.delete(id);
+  }
 }
 
-module.exports = { list, get, create, update, remove };
+module.exports = new QuestionSetService();
