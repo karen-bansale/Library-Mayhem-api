@@ -1,16 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/question-set.controller');
-const rules = require('../validators/question-set.validator');
-const validate = require('../middlewares/validate');
-const requireUser = require('../middlewares/require-user');
+const questionSetController = require('../controllers/question-set.controller');
 
-router.use(requireUser('HOST', 'ADMIN'));
-
-router.get('/', controller.list);
-router.post('/', rules.createRules, validate, controller.create);
-router.get('/:id', rules.idParam, validate, controller.get);
-router.patch('/:id', rules.updateRules, validate, controller.update);
-router.delete('/:id', rules.idParam, validate, controller.remove);
+router.get('/', (req, res, next) => questionSetController.getAll(req, res, next));
+router.get('/:id', (req, res, next) => questionSetController.getById(req, res, next));
+router.post('/', (req, res, next) => questionSetController.create(req, res, next));
+router.put('/:id', (req, res, next) => questionSetController.update(req, res, next));
+router.delete('/:id', (req, res, next) => questionSetController.delete(req, res, next));
 
 module.exports = router;
