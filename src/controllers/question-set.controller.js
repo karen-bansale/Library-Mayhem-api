@@ -1,56 +1,45 @@
+const { matchedData } = require('express-validator');
 const questionSetService = require('../services/question-set.service');
 
-class QuestionSetController {
-  async getAll(req, res, next) {
-    try {
-      const sets = await questionSetService.getAllQuestionSets();
-      return res.status(200).json({ status: 'success', data: sets });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async getById(req, res, next) {
-    try {
-      const { id } = req.params;
-      const set = await questionSetService.getQuestionSetById(id);
-      return res.status(200).json({ status: 'success', data: set });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async create(req, res, next) {
-    try {
-      const userId = req.user ? req.user.user_id : req.body.host_id;
-      const set = await questionSetService.createQuestionSet(userId, req.body);
-      return res.status(201).json({ status: 'success', data: set });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async update(req, res, next) {
-    try {
-      const { id } = req.params;
-      const userId = req.user ? req.user.user_id : req.body.host_id;
-      const updated = await questionSetService.updateQuestionSet(id, userId, req.body);
-      return res.status(200).json({ status: 'success', data: updated });
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async delete(req, res, next) {
-    try {
-      const { id } = req.params;
-      const userId = req.user ? req.user.user_id : req.body.host_id;
-      await questionSetService.deleteQuestionSet(id, userId);
-      return res.status(200).json({ status: 'success', message: 'Question set deleted successfully.' });
-    } catch (error) {
-      next(error);
-    }
-  }
+function toJson(questionSet) {
+  return {
+    id: questionSet.set_id,
+    title: questionSet.title,
+    subject: questionSet.subject,
+    is_public: questionSet.is_public,
+    host_id: questionSet.host_id,
+    created_at: questionSet.created_at,
+  };
 }
 
-module.exports = new QuestionSetController();
+async function list(req, res) {
+  const questionSets = await questionSetService.list(req.user);
+  res.status(200).json(questionSets.map(toJson));
+}
+
+async function get(req, res) {
+  const { id } = matchedData(req);
+  const questionSet = await questionSetService.get(id, req.user);
+  res.status(200).json(toJson(questionSet));
+}
+
+async function create(req, res) {
+  const data = matchedData(req, { locations: ['body'] });
+  const questionSet = await questionSetService.create(data, req.user);
+  res.status(201).json(toJson(questionSet));
+}
+
+async function update(req, res) {
+  const { id } = matchedData(req, { locations: ['params'] });
+  const changes = matchedData(req, { locations: ['body'] });
+  const questionSet = await questionSetService.update(id, changes, req.user);
+  res.status(200).json(toJson(questionSet));
+}
+
+async function remove(req, res) {
+  const { id } = matchedData(req);
+  await questionSetService.remove(id, req.user);
+  res.status(204).end();
+}
+
+module.exports = { list, get, create, update, remove };
