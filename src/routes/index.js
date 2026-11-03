@@ -1,15 +1,14 @@
-const { Router } = require('express');
+const express = require('express');
+const router = express.Router();
+
 const currentUser = require('../middlewares/current-user');
+const healthRoutes = require('./health.routes');
 
-const router = Router();
-
-router.use('/health', require('./health.routes'));
-router.use('/game-info', require('./game-info.routes'));
-router.use('/results', require('./results.routes'));
-
-// Ilagay ang currentUser middleware dito para ma-apply sa mga susunod na routes
 router.use(currentUser);
+router.use('/health', healthRoutes);
 
-router.use('/question-sets', require('./question-set.routes'));
+// I-comment muna ang mga routes na wala pa ang mga file:
+// const questionSetRoutes = require('./question-set.routes');
+// router.use('/question-sets', questionSetRoutes);
 
 module.exports = router;
