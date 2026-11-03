@@ -1,7 +1,7 @@
 // The single place that maps URLs to route files.
 const { Router } = require('express');
 const currentUser = require('../middlewares/current-user');
-const resultRoutes = require('./result.routes');
+const resultRoutes = require('./results.routes');
 
 const router = Router();
 
