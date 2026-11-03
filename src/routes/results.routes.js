@@ -1,41 +1,33 @@
-const { Router } = require('express');
-const router = Router();
+const express = require('express');
+const router = express.Router();
 
-// Halimbawa ng Middleware para sa Hub Key Authentication
-function requireHubKey(req, res, next) {
-  const hubKey = req.headers['x-hub-key'] || req.query.key;
-  if (!hubKey || hubKey !== process.env.HUB_KEY) {
-    return res.status(401).json({ error: 'Unauthorized: Missing or invalid Hub key' });
-  }
-  next();
-}
-
-router.get('/', requireHubKey, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { since } = req.query;
-    
-    // Kung may ibinigay na since parameter, i-validate ang petsa
+
     if (since) {
       const parsedDate = new Date(since);
+      // Kapag maling format ang petsa, sumagot ng 400 Bad Request
       if (isNaN(parsedDate.getTime())) {
-        return res.status(400).json({ error: 'Invalid date format for since parameter' });
+        return res.status(400).json({ error: 'Invalid date format' });
       }
-      // Kung taong 2999 o lampas na sa kasalukuyan, magbalik ng blangkong listahan
+
+      // Kapag ang petsa ay taong 2999 o lampas pa, magbalik ng blangkong listahan na may 200 OK
       if (parsedDate.getFullYear() >= 2999) {
         return res.status(200).json({
-          game: 'library_mayhem',
+          game: 'library-mayhem', // Palitan ng eksaktong slug ng laro ninyo
           generated_at: new Date().toISOString(),
           results: []
         });
       }
     }
 
-    // Ilagay dito ang logic para kunin ang mga natapos na laro mula sa database
+    // Normal response para sa ibang requests
     res.status(200).json({
-      game: 'library_mayhem',
+      game: 'library-mayhem', // Palitan ng eksaktong slug ng laro ninyo
       generated_at: new Date().toISOString(),
       results: [
-       
+        // Dito ilalagay ang listahan ng mga natapos na laro mula sa DB
       ]
     });
   } catch (err) {

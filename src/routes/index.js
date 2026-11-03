@@ -1,6 +1,7 @@
 // The single place that maps URLs to route files.
 const { Router } = require('express');
 const currentUser = require('../middlewares/current-user');
+const resultRoutes = require('./result.routes');
 
 const router = Router();
 
@@ -10,6 +11,7 @@ router.use('/game-info', require('./game-info.routes'));
 
 // From here on, req.user says who is calling (or null).
 router.use(currentUser);
+router.use('/results', resultRoutes);
 router.use('/question-sets', require('./question-set.routes'));
 // Mount your modules here, one line each. For example:
 // router.use('/question-sets', require('./question-set.routes'));
