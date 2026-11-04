@@ -3,7 +3,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    // Suriin kung naroroon ang kinakailangang Hub key o authorization header
+    
     const hubKey = req.headers['x-hub-key'] || req.headers['authorization'];
     
     if (!hubKey) {
@@ -14,10 +14,12 @@ router.get('/', async (req, res) => {
 
     if (since) {
       const parsedDate = new Date(since);
+      
       if (isNaN(parsedDate.getTime())) {
         return res.status(400).json({ error: 'Invalid date format' });
       }
 
+      
       if (parsedDate.getFullYear() >= 2999) {
         return res.status(200).json({
           game: 'library-mayhem',
@@ -27,13 +29,14 @@ router.get('/', async (req, res) => {
       }
     }
 
-    res.status(200).json({
+    
+    return res.status(200).json({
       game: 'library-mayhem',
-          generated_at: new Date().toISOString(),
+      generated_at: new Date().toISOString(),
       results: []
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 });
 
