@@ -3,11 +3,10 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    
     const hubKey = req.headers['x-hub-key'] || req.headers['authorization'];
     
     if (!hubKey) {
-      return res.status(401).json({ error: 'Unauthorized: Hub key is required' });
+      return res.status(401).json({ error: 'AUTH_REQUIRED' });
     }
 
     const { since } = req.query;
@@ -16,10 +15,9 @@ router.get('/', async (req, res) => {
       const parsedDate = new Date(since);
       
       if (isNaN(parsedDate.getTime())) {
-        return res.status(400).json({ error: 'Invalid date format' });
+        return res.status(400).json({ error: 'VALIDATION_FAILED' });
       }
 
-      
       if (parsedDate.getFullYear() >= 2999) {
         return res.status(200).json({
           game: 'library-mayhem',
@@ -29,7 +27,6 @@ router.get('/', async (req, res) => {
       }
     }
 
-    
     return res.status(200).json({
       game: 'library-mayhem',
       generated_at: new Date().toISOString(),
