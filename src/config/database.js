@@ -1,23 +1,31 @@
-// Database settings for BOTH the running API and sequelize-cli.
-// Values come from .env - nothing secret is written in this file.
-const env = require('./env');
-
-const settings = {
-  username: env.db.user,
-  password: env.db.password,
-  database: env.db.name,
-  host: env.db.host,
-  port: env.db.port,
-  dialect: 'postgres',
-  logging: false,
-  // Track seeders in a table, the same way migrations are tracked,
-  // so running "db:seed:all" twice does not insert the data twice.
-  seederStorage: 'sequelize',
-  pool: { max: 10, min: 0, idle: 10000 },
-};
+require('dotenv').config();
 
 module.exports = {
-  development: settings,
-  test: settings,
-  production: settings,
+  development: {
+    username: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || 'KAREN2006',
+    database: process.env.DB_NAME || 'Library_Mayhem',
+    host: process.env.DB_HOST || '127.0.0.1',
+    port: process.env.DB_PORT || 5432,
+    dialect: 'postgres',
+    logging: false,
+  },
+  test: {
+    username: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || 'KAREN2006',
+    database: process.env.DB_NAME_TEST || 'Library_Mayhem_test',
+    host: process.env.DB_HOST || '127.0.0.1',
+    port: process.env.DB_PORT || 5432,
+    dialect: 'postgres',
+    logging: false,
+  },
+  production: {
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT || 5432,
+    dialect: 'postgres',
+    logging: false,
+  },
 };

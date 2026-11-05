@@ -1,15 +1,14 @@
-// ONE Sequelize instance (one connection pool) for the whole API.
-// Every other file imports it from here - nobody opens a second one.
 const { Sequelize, DataTypes } = require('sequelize');
-const env = require('../config/env');
-const dbConfig = require('../config/database')[env.nodeEnv];
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config/database')[env];
+const QuestionSet = require('./question-set')(sequelize, DataTypes);
 
-const sequelize = new Sequelize(
-  dbConfig.database,
-  dbConfig.username,
-  dbConfig.password,
-  dbConfig
-);
+let sequelize;
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
 
 // Week 11: load your models here, one line each, then add their associations.
 // Example:

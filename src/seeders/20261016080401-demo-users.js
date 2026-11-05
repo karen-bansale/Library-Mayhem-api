@@ -9,7 +9,7 @@ module.exports = {
         full_name: 'Alex Rivera',
         email: 'alex.rivera@library.test',
         password_hash: 'hashed_password_123',
-        role: 'host',
+        role: 'HOST',
         created_at: new Date()
       },
       {
