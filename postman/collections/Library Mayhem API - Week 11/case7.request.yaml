@@ -1,0 +1,14 @@
+$kind: http-request
+url: http://localhost:3001/api/v1/question-sets/{{setId}}
+method: GET
+headers:
+  X-Demo-User: 2099-0010
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"status is 200\", function () {\r
+
+      \    pm.response.to.have.status(200);\r
+
+      });"
+    language: text/javascript
+order: 7000

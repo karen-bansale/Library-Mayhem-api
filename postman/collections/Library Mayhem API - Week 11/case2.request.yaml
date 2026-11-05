@@ -1,0 +1,17 @@
+$kind: http-request
+url: http://localhost:3001/api/v1/question-sets
+method: POST
+headers:
+  X-Demo-User: 2099-0010
+body:
+  type: json
+  content: '{"title": "Ab"}'
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"status is 400\", function () {\r
+
+      \    pm.response.to.have.status(400);\r
+
+      });"
+    language: text/javascript
+order: 12000
