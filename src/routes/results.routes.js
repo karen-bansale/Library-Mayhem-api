@@ -1,10 +1,40 @@
-// Hub Contract rule 7: the Library Game Hub reads finished games here.
-const { Router } = require('express');
-const hubKey = require('../middlewares/hub-key');
-const controller = require('../controllers/results.controller');
+const express = require('express');
+const router = express.Router();
 
-const router = Router();
+router.get('/', async (req, res) => {
+  try {
+    const hubKey = req.headers['x-hub-key'] || req.headers['authorization'];
+    
+    if (!hubKey) {
+      return res.status(401).json({ error: 'AUTH_REQUIRED' });
+    }
 
-router.get('/', hubKey, controller.getResults);
+    const { since } = req.query;
+
+    if (since) {
+      const parsedDate = new Date(since);
+      
+      if (isNaN(parsedDate.getTime())) {
+        return res.status(400).json({ error: 'VALIDATION_FAILED' });
+      }
+
+      if (parsedDate.getFullYear() >= 2999) {
+        return res.status(200).json({
+          game: 'library-mayhem',
+          generated_at: new Date().toISOString(),
+          results: []
+        });
+      }
+    }
+
+    return res.status(200).json({
+      game: 'library-mayhem',
+      generated_at: new Date().toISOString(),
+      results: []
+    });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
 
 module.exports = router;

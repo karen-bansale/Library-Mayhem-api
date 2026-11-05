@@ -7,6 +7,8 @@ module.exports = (sequelize, DataTypes) =>
       title: { type: DataTypes.STRING(150), allowNull: false },
       subject: { type: DataTypes.STRING(60) },
       is_public: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+      title: { type: DataTypes.STRING(255), allowNull: false },
+      description: { type: DataTypes.STRING(255) },
     },
     { tableName: 'question_sets', timestamps: true, createdAt: 'created_at', updatedAt: false }
   );

@@ -1,0 +1,14 @@
+$kind: http-request
+url: http://localhost:3001/api/v1/question-sets
+method: GET
+headers:
+  X-Demo-User: 2099-0003
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"status is 403\", function () {\r
+
+      \    pm.response.to.have.status(403);\r
+
+      });"
+    language: text/javascript
+order: 9000

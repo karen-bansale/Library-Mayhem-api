@@ -1,0 +1,19 @@
+$kind: http-request
+url: http://localhost:3001/api/v1/question-sets
+method: POST
+headers:
+  X-Demo-User: 2099-0010
+body:
+  type: json
+  content: '{"title": "Philippine Literature"}'
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"status is 201\", function () {\r
+
+      \    pm.response.to.have.status(201);\r
+
+      });\r
+
+      pm.collectionVariables.set(\"setId\", pm.response.json().id);"
+    language: text/javascript
+order: 13000
