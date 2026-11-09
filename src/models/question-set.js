@@ -8,10 +8,5 @@ module.exports = (sequelize, DataTypes) =>
       subject: { type: DataTypes.STRING(255), allowNull: false },
       description: { type: DataTypes.STRING(255), allowNull: true },
     },
-    {
-      tableName: 'question_sets',
-      timestamps: true,
-      createdAt: 'created_at',
-      updatedAt: false,
-    }
+    { tableName: 'question_sets', timestamps: true, createdAt: 'created_at', updatedAt: false }
   );

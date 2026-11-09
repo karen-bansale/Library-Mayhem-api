@@ -16,12 +16,13 @@ if (config.use_env_variable) {
   );
 }
 
-// I-load lang ang models pagkatapos ma-initialize ang sequelize.
+// I-load ang models pagkatapos ma-initialize ang sequelize.
 const User = require('./user')(sequelize, DataTypes);
 const QuestionSet = require('./question-set')(sequelize, DataTypes);
 const GameSession = require('./game-session')(sequelize, DataTypes);
 const Player = require('./player')(sequelize, DataTypes);
 
+// Associations
 User.hasMany(QuestionSet, { foreignKey: 'host_id' });
 QuestionSet.belongsTo(User, { foreignKey: 'host_id', as: 'host' });
 
