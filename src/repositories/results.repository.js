@@ -1,17 +1,18 @@
-const { sequelize } = require('../models'); 
+const { QueryTypes } = require('sequelize');
+const { sequelize } = require('../models');
 
 async function findFinishedGamePlayers(since) {
   const query = `
-    SELECT 
+    SELECT
       gs.session_code,
       gs.started_at,
       gs.ended_at,
       u.school_id,
       p.nickname,
       p.score,
-      CASE 
-        WHEN p.finished_at IS NOT NULL THEN true 
-        ELSE false 
+      CASE
+        WHEN p.finished_at IS NOT NULL THEN true
+        ELSE false
       END AS completed
     FROM game_sessions gs
     JOIN players p ON gs.session_id = p.session_id
@@ -21,14 +22,8 @@ async function findFinishedGamePlayers(since) {
     ORDER BY gs.ended_at DESC;
   `;
 
-  const results = await sequelize.query(query, {
+  return sequelize.query(query, {
     replacements: { since },
-    type: sequelize.QueryTypes.SELECT
+    type: QueryTypes.SELECT,
   });
-
-  return results;
 }
-
-module.exports = {
-  findFinishedGamePlayers,
-};
