@@ -1,6 +1,6 @@
 // TEMPORARY - Week 11 only.
-// Login is built in Week 12. Until then the caller says who they are in a header:
-//     X-Demo-User: 2099-0001
+// Login is built in Week 12. Until then the caller says who they are in
+// the X-Demo-User header.
 // Anyone can type any ID, so this is NOT security. It only lets us build and
 // test endpoints before login exists. Week 12 replaces the inside of this file
 // with a real token check. Controllers and services read req.user and stay the same.
@@ -16,7 +16,14 @@ async function currentUser(req, res, next) {
   const user = schoolId ? await userRepository.findBySchoolId(schoolId) : null;
 
   // Only what the rest of the code needs. Never the whole account.
-  req.user = user ? { user_id: user.user_id, school_id: user.school_id, role: user.role } : null;
+  req.user = user
+    ? {
+        user_id: user.user_id,
+        school_id: user.school_id,
+        role: String(user.role).toUpperCase(),
+      }
+    : null;
+
   next();
 }
 

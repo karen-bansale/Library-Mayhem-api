@@ -9,9 +9,11 @@ router.use('/health', require('./health.routes'));
 router.use('/game-info', require('./game-info.routes'));
 router.use('/results', require('./results.routes'));
 
+
 // From here on, req.user says who is calling (or null).
 router.use(currentUser);
 
+router.use('/question-sets', require('./question-set.routes'));
 // Mount your modules here, one line each. For example:
 // router.use('/question-sets', require('./question-set.routes'));
 // router.use('/sessions', require('./session.routes'));

@@ -27,3 +27,5 @@ async function findFinishedGamePlayers(since) {
     type: QueryTypes.SELECT,
   });
 }
+
+module.exports = { findFinishedGamePlayers };
