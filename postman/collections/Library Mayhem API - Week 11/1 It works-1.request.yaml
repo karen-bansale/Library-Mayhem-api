@@ -1,0 +1,30 @@
+$kind: http-request
+name: 1 It works
+url: http://localhost:3001/api/v1/question-sets
+method: POST
+headers:
+  X-Demo-User: 2099-0011
+body:
+  type: json
+  content: "{\r
+
+    \  \"title\": \"Postman Test Set\",\r
+
+    \  \"subject\": \"Literature\",\r
+
+    \  \"description\": \"Created by the Week 11 collection\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"status is 201\", function () {\r
+
+      \  pm.response.to.have.status(201);\r
+
+      });\r
+
+      \r
+
+      pm.collectionVariables.set(\"setId\", pm.response.json().id);"
+    language: text/javascript
+order: 1603

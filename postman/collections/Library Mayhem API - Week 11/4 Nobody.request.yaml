@@ -1,0 +1,20 @@
+$kind: http-request
+url: http://localhost:3001/api/v1/question-sets
+method: GET
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"status is 401\", function () {\r
+
+      \  pm.response.to.have.status(401);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"AUTH_REQUIRED is returned\", function () {\r
+
+      \  pm.expect(pm.response.text()).to.include(\"AUTH_REQUIRED\");\r
+
+      });"
+    language: text/javascript
+order: 5000
