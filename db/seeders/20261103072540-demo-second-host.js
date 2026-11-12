@@ -4,7 +4,7 @@ module.exports = {
   async up(queryInterface) {
     await queryInterface.bulkInsert('users', [
       { 
-        school_id: '2099-0010', 
+        school_id: '2099-0011', 
         username: 'bencastro2',   
         full_name: 'Ben Castro',
         email: 'ben.castro2@librarymayhem.test', 
@@ -16,6 +16,6 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    await queryInterface.bulkDelete('users', { school_id: '2099-0010' }, {});
+    await queryInterface.bulkDelete('users', { school_id: '2099-0011' }, {});
   },
 };
