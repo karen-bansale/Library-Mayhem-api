@@ -7,17 +7,6 @@ const { constraintOf } = require('../errors/db-errors');
 async function join(code, nickname, user) {
   const session = await sessionService.findOrFail(code);
 
-
-  const existingSeat = await playerRepository.findSeat(
-    session.session_id,
-    user.user_id
-  );
-
-  if (existingSeat) {
-    return { session, player: existingSeat, created: false };
-  }
-
-
   if (session.status === 'CLOSED') {
     throw conflict('SESSION_ENDED', 'This game has ended.');
   }
@@ -26,7 +15,32 @@ async function join(code, nickname, user) {
     throw conflict('SESSION_NOT_JOINABLE', 'This game has already started.');
   }
 
-  const seatsTaken = await playerRepository.countBySession(session.session_id);
+  // 1. I-check kung may existing seat na ang user, kung meron -> 409 Conflict na agad
+  const existingSeat = await playerRepository.findSeat(
+    session.session_id,
+    user.user_id
+  );
+
+  if (existingSeat) {
+    throw conflict(
+      'ALREADY_JOINED',
+      'You have already joined this game.'
+    );
+  }
+
+  const playersInSession = await playerRepository.listBySession(session.session_id);
+  const nicknameTaken = playersInSession.some(
+    (p) => p.nickname === nickname && p.user_id !== user.user_id
+  );
+
+  if (nicknameTaken) {
+    throw conflict(
+      'NICKNAME_TAKEN',
+      'That nickname is already in this game.'
+    );
+  }
+
+  const seatsTaken = playersInSession.length;
 
   if (seatsTaken >= gameInfo.max_players) {
     throw conflict('SESSION_FULL', 'This game is full.');
@@ -43,20 +57,15 @@ async function join(code, nickname, user) {
   } catch (error) {
     const constraint = constraintOf(error);
 
-
+    // 2. Kung tumama sa database unique constraint, i-translate sa 409 Conflict
     if (constraint === 'unique_session_user_seat') {
-      const seat = await playerRepository.findSeat(
-        session.session_id,
-        user.user_id
+      throw conflict(
+        'ALREADY_JOINED',
+        'You have already joined this game.'
       );
-
-      if (seat) {
-        return { session, player: seat, created: false };
-      }
     }
 
-
-    if (constraint === 'unique_session_nickname') {
+    if (constraint === 'unique_session_nickname' || constraint === 'uq_player_nickname') {
       throw conflict(
         'NICKNAME_TAKEN',
         'That nickname is already in this game.'

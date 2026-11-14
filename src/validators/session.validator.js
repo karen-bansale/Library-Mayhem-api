@@ -18,8 +18,9 @@ const createRules = [
 const statusRules = [
   codeParam(),
   body('status')
-    .isIn(['RUNNING', 'CLOSED'])
-    .withMessage('status must be RUNNING or CLOSED'),
+    .isIn(['RUNNING', 'CLOSED', 'LOBBY'])
+    .withMessage('status must be RUNNING or CLOSED or LOBBY'),
+
 ];
 
 const joinRules = [

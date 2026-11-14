@@ -27,7 +27,6 @@ async function create(questionSetId, user) {
     throw forbidden('This question set belongs to another host.');
   }
 
-
   for (let attempt = 1; attempt <= 5; attempt += 1) {
     try {
       return await sessionRepository.create({
@@ -55,7 +54,7 @@ async function findOrFail(code) {
   return session;
 }
 
-  async function changeStatus(code, status, user) {
+async function changeStatus(code, status, user) {
   const session = await findOrFail(code);
 
   if (session.host_id !== user.user_id && user.role !== 'ADMIN') {
@@ -66,9 +65,15 @@ async function findOrFail(code) {
     throw conflict('SESSION_CLOSED', 'A closed game cannot be reopened.');
   }
 
+  // Ito ang nagba-block sa pagbabalik sa LOBBY para mag-return ng 409 Conflict (Case #12)
+  if (session.status !== 'LOBBY' && status === 'LOBBY') {
+    throw conflict('INVALID_STATUS_TRANSITION', 'Cannot change session status back to LOBBY.');
+  }
+
   session.status = status;
   await session.save();
 
   return session;
 }
+
 module.exports = { create, findOrFail, changeStatus };

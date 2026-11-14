@@ -1,3 +1,5 @@
+'use strict';
+
 const { matchedData } = require('express-validator');
 const playerService = require('../services/player.service');
 

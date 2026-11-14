@@ -44,7 +44,7 @@ module.exports = {
       created_at: {
         type: Sequelize.DATE,
         allowNull: false,
-        defaultValue: Sequelize.fn('NOW') // Idinagdag ang comma sa itaas nito
+        defaultValue: Sequelize.fn('NOW')
       },
       updated_at: {
         type: Sequelize.DATE,
@@ -54,9 +54,9 @@ module.exports = {
     });
 
     await queryInterface.addConstraint('players', {
-      fields: ['session_id', 'nickname'],
+      fields: ['session_id', 'user_id'],
       type: 'unique',
-      name: 'uq_player_nickname' 
+      name: 'uq_session_user_seat'
     });
   },
 

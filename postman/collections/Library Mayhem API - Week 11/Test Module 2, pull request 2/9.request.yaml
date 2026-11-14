@@ -1,0 +1,17 @@
+$kind: http-request
+url: http://localhost:3001/api/v1/sessions/{{code}}/players
+method: POST
+headers:
+  X-Demo-User: 2099-0003
+body:
+  type: json
+  content: '{"nickname": "A"}'
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 400 Bad Request\", function () {\r
+
+      \    pm.response.to.have.status(400);\r
+
+      });"
+    language: text/javascript
+order: 9000
