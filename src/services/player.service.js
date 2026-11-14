@@ -15,17 +15,14 @@ async function join(code, nickname, user) {
     throw conflict('SESSION_NOT_JOINABLE', 'This game has already started.');
   }
 
-  // 1. I-check kung may existing seat na ang user, kung meron -> 409 Conflict na agad
+  // Kapag sumali ulit ang parehong user, ibabalik nito ang existing seat na may created: false (magiging 200 OK)
   const existingSeat = await playerRepository.findSeat(
     session.session_id,
     user.user_id
   );
 
   if (existingSeat) {
-    throw conflict(
-      'ALREADY_JOINED',
-      'You have already joined this game.'
-    );
+    return { session, player: existingSeat, created: false };
   }
 
   const playersInSession = await playerRepository.listBySession(session.session_id);
@@ -57,12 +54,15 @@ async function join(code, nickname, user) {
   } catch (error) {
     const constraint = constraintOf(error);
 
-    // 2. Kung tumama sa database unique constraint, i-translate sa 409 Conflict
     if (constraint === 'unique_session_user_seat') {
-      throw conflict(
-        'ALREADY_JOINED',
-        'You have already joined this game.'
+      const seat = await playerRepository.findSeat(
+        session.session_id,
+        user.user_id
       );
+
+      if (seat) {
+        return { session, player: seat, created: false };
+      }
     }
 
     if (constraint === 'unique_session_nickname' || constraint === 'uq_player_nickname') {
