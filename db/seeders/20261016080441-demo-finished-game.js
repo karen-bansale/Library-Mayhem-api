@@ -13,11 +13,12 @@ module.exports = {
 
     
     await queryInterface.bulkInsert('question_sets', [{
-      host_id: host.user_id,
-      title: 'Library Orientation Basics',
-      description: 'Basic library rules test',
-      created_at: new Date()
-    }]);
+  host_id: host.user_id,
+  title: 'Library Orientation Basics',
+  subject: 'Library Orientation',
+  description: 'Basic library rules test',
+  created_at: new Date()
+}]);
 
     const [[set]] = await db.query(
       "SELECT set_id FROM question_sets WHERE title = 'Library Orientation Basics'"

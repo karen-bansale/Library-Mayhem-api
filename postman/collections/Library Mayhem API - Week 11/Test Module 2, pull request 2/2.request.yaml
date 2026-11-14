@@ -1,0 +1,17 @@
+$kind: http-request
+url: http://localhost:3001/api/v1/sessions
+method: POST
+headers:
+  X-Demo-User: 2099-0002
+body:
+  type: json
+  content: '{"set_id": 1}'
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"Status code is 403 Forbidden\", function () {\r
+
+      \    pm.response.to.have.status(403);\r
+
+      });"
+    language: text/javascript
+order: 2000

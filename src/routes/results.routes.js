@@ -1,40 +1,9 @@
 const express = require('express');
+const hubKey = require('../middlewares/hub-key');
+const resultsController = require('../controllers/results.controller');
+
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-  try {
-    const hubKey = req.headers['x-hub-key'] || req.headers['authorization'];
-    
-    if (!hubKey) {
-      return res.status(401).json({ error: 'AUTH_REQUIRED' });
-    }
-
-    const { since } = req.query;
-
-    if (since) {
-      const parsedDate = new Date(since);
-      
-      if (isNaN(parsedDate.getTime())) {
-        return res.status(400).json({ error: 'VALIDATION_FAILED' });
-      }
-
-      if (parsedDate.getFullYear() >= 2999) {
-        return res.status(200).json({
-          game: 'library-mayhem',
-          generated_at: new Date().toISOString(),
-          results: []
-        });
-      }
-    }
-
-    return res.status(200).json({
-      game: 'library-mayhem',
-      generated_at: new Date().toISOString(),
-      results: []
-    });
-  } catch (err) {
-    return res.status(500).json({ error: err.message });
-  }
-});
+router.get('/', hubKey, resultsController.getResults);
 
 module.exports = router;
