@@ -1,0 +1,22 @@
+$kind: http-request
+url: http://localhost:3001/api/v1/question-sets/abc
+method: GET
+headers:
+  X-Demo-User: 2099-0011
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"status is 400\", function () {\r
+
+      \  pm.response.to.have.status(400);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"VALIDATION_FAILED is returned\", function () {\r
+
+      \  pm.expect(pm.response.text()).to.include(\"VALIDATION_FAILED\");\r
+
+      });"
+    language: text/javascript
+order: 10000

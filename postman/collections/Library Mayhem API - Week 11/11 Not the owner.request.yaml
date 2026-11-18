@@ -1,0 +1,25 @@
+$kind: http-request
+url: http://localhost:3001/api/v1/question-sets/{{setId}}
+method: PATCH
+headers:
+  X-Demo-User: 2099-0012
+body:
+  type: json
+  content: '{"title": "Hacked"}'
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"status is 403\", function () {\r
+
+      \  pm.response.to.have.status(403);\r
+
+      });\r
+
+      \r
+
+      pm.test(\"FORBIDDEN is returned\", function () {\r
+
+      \  pm.expect(pm.response.text()).to.include(\"FORBIDDEN\");\r
+
+      });"
+    language: text/javascript
+order: 12000

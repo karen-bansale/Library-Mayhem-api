@@ -1,0 +1,17 @@
+$kind: http-request
+url: http://localhost:3001/api/v1/question-sets/{{setId}}
+method: PATCH
+headers:
+  X-Demo-User: 2099-0011
+body:
+  type: json
+  content: '{"title": "Updated Title"}'
+scripts:
+  - type: afterResponse
+    code: "pm.test(\"status is 200\", function () {\r
+
+      \  pm.response.to.have.status(200);\r
+
+      });"
+    language: text/javascript
+order: 11000
